@@ -83,7 +83,7 @@ unsigned long currTime;  // holder for current time
 
 // Set up pins for the PUMP MOSFETs. D7 already used for Hydros21
 const uint8_t  pinPump1  = 4;               // MOSFET Pump1
-const uint8_t  pinSolen1  = 5;               // MOSFET Solenoid1
+const uint8_t  pinSolen1  = 10;               // MOSFET Solenoid1
 
 // ==========================================================================
 //  Using the Processor as a Sensor
@@ -340,18 +340,22 @@ void loop() {
       Serial.print(" Battery V:");
       Serial.print(getBatteryVoltage());
       Serial.print(" Cond uS/cm:");
-      //Serial.print(hydros.sensorValues[0]);
-      Serial.print(variableList[0]->getValue());
+      Serial.println(hydros.sensorValues[2]); //current Cond
+    //Serial.print(variableList[0]->getValue()); //last Cond
       Serial.print(" Temp C:");
-      Serial.print(variableList[1]->getValue());
+      Serial.println(hydros.sensorValues[1]); //current Temp
+    //Serial.print(variableList[1]->getValue()); //last Temp
       Serial.print(" Depth mm:");
-      Serial.println(variableList[2]->getValue());
+      Serial.println(hydros.sensorValues[0]); //current Depth
+    //Serial.println(variableList[2]->getValue()); //last Depth
+      Serial.println("hydros.sensorValues[0-2]");
+      
       //If depth > sipMinDepth && cond < sipMaxDepth
       //&& remainFillSec > stdSipSec (at least 1 sip left)
-      if (variableList[2]->getValue() > sipMinDepth
-          && variableList[0]->getValue() < sipMaxCond
+      if (hydros.sensorValues[0] > sipMinDepth
+          && hydros.sensorValues[2] < sipMaxCond
           && remainFillSec > 10) {
-            currDepth = variableList[2]->getValue();
+            currDepth = hydros.sensorValues[0];
           //limits sip fill < interval -1min Gsheet&flush -15sec SDwrite
             Serial.println(" PICK MIN of adjSipSec, nextLogTime ");
             Serial.println(stdSipSec*currDepth/sipMinDepth);
