@@ -72,7 +72,7 @@ const uint32_t stdFlushSec = 30; //standard flush seconds
 long adjFlushSec = stdFlushSec;  //adjusted flush seconcds
 // Sip pumptime (in sec) to sample
 const uint32_t stdSipSec = 30; //standard sip seconds
-long adjSipSec  = sipSec; //adjusted flush seconcds
+long adjSipSec  = stdSipSec; //adjusted flush seconcds
 long currDepth = 0;
 // Sip minDepth (in mm on Hydros21) to sample
 const long sipMinDepth = 100;
@@ -354,7 +354,7 @@ void loop() {
             currDepth = variableList[2]->getValue();
           //limits sip fill < interval -1min Gsheet&flush -15sec SDwrite
             Serial.println(" PICK MIN of adjSipSec, nextLogTime ");
-            Serial.println(sipSec*currDepth/sipMinDepth);
+            Serial.println(stdSipSec*currDepth/sipMinDepth);
             Serial.println(60*sampleInterval-stdFlushSec-15);
             adjSipSec = min(stdSipSec*currDepth/sipMinDepth,60*sampleInterval-stdFlushSec-15); 
           //limits the sip fill to  max of remaining vol
@@ -393,7 +393,7 @@ void loop() {
         Serial.print(stdFlushSec);
         Serial.print(" stdSipSec:");
         Serial.print(stdSipSec);
-        Serial.print(" prev sipSec:");
+        Serial.print(" prev adjSipSec:");
         Serial.println(adjSipSec);
         Serial.print(variableList[0]->getValue());
         Serial.print("  ");
